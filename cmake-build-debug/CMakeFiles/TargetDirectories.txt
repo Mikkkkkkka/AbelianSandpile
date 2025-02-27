@@ -1,0 +1,3 @@
+C:/Users/NeSai/CLionProjects/AbelianSandpile/cmake-build-debug/CMakeFiles/AbelianSandpile.dir
+C:/Users/NeSai/CLionProjects/AbelianSandpile/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/NeSai/CLionProjects/AbelianSandpile/cmake-build-debug/CMakeFiles/rebuild_cache.dir
