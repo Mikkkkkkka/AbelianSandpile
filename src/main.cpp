@@ -50,14 +50,14 @@ int main(const int argc, char **argv) {
     auto printer = Printer("./out/");
     printer.print(model, "somefile");
 
-    // //
-    // // debug
-    // //
-    // for (int i = 0; i < model.height; i++) {
-    //     for (int j = 0; j < model.width; j++)
-    //         std::cout << model.field[i][j];
-    //     std::cout << std::endl;
-    // }
+    //
+    // debug
+    //
+    for (int i = 0; i < model.height; i++) {
+        for (int j = 0; j < model.width; j++)
+            std::cout << model.field[i][j];
+        std::cout << std::endl;
+    }
 
     return 0;
 }

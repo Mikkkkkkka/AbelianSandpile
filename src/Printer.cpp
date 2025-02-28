@@ -8,7 +8,7 @@
 #include <iostream>
 #include <ostream>
 
-uint8_t* bigint_to_byte_slice(uint32_t value) {
+uint8_t* bigint_to_bigendian(uint32_t value) {
     auto slice = new uint8_t[4];
     for (int i = 0; i < 4; i++)
         slice[i] = value >> (8 * i) & 0xFF;
@@ -21,12 +21,12 @@ void rewrite_data(uint8_t* original, uint8_t* rewritten, int position, int lengt
 }
 
 uint8_t calculate_pixel_array_padding(const Model& model) {
-    return 8 - model.width % 8; // in pseudo-pixels
+    return 8 - (model.width % 8); // in pseudo-pixels
 }
 
 uint64_t calculate_pixel_array_length(const Model& model) {
     uint8_t padding_amount = calculate_pixel_array_padding(model);
-    return 4 * (model.width + padding_amount) * model.height;
+    return (model.width + padding_amount) * model.height / 2;
 }
 
 uint8_t* calculate_pixel_array(const Model& model) {
@@ -59,7 +59,7 @@ uint8_t* calculate_pixel_array(const Model& model) {
             count++;
         }
         // add padding somehow
-        count += pixel_array_padding;
+        count += pixel_array_padding / 2 + 1;
     }
 
     return pixel_array;
@@ -97,23 +97,24 @@ void Printer::print(const Model& model, std::string filename) {
         0x00, 0xFF, 0xFF, 0x00, // rgb(255, 255, 0)     3 песчинок  Жёлтый цвет
         0x00, 0x00, 0x00, 0x00, // rgb(0, 0, 0)         >3 песчинок Чёрный цвет
     }; // 20
-    //
-    // debug
-    //
-    uint8_t pixel_array[] {
-        0x01, 0x12, 0x00, 0x00,
-        0x21, 0x13, 0x00, 0x00,
-        0x31, 0x14, 0x00, 0x00,
-        0x41, 0x15, 0x00, 0x00,
-    };
+    uint64_t pixel_array_length = calculate_pixel_array_length(model);
+    uint8_t* pixel_array = calculate_pixel_array(model);
 
-    uint8_t size = 0x5a;
-    uint8_t width = 0x04;
-    uint8_t height = 0x04;
-
-    rewrite_data(file_header, &size, 2, 1);
-    rewrite_data(bitmap_info_header, &width, 4, 1);
-    rewrite_data(bitmap_info_header, &height, 8, 1);
+    rewrite_data(
+        file_header,
+        bigint_to_bigendian(74 + pixel_array_length),
+        2,
+        4);
+    rewrite_data(
+        bitmap_info_header,
+        bigint_to_bigendian(model.width),
+        4,
+        4);
+    rewrite_data(
+        bitmap_info_header,
+        bigint_to_bigendian(model.height),
+        8,
+        4);
 
     std::ofstream output_file;
     output_file.open("image.bmp", std::ios::binary);
@@ -131,11 +132,9 @@ void Printer::print(const Model& model, std::string filename) {
     for (int i = 0; i < sizeof(color_pallete); i++)
         output_file << color_pallete[i];
 
-    for (int i = 0; i < sizeof(pixel_array); i++)
+    for (int i = 0; i < pixel_array_length; i++)
         output_file << pixel_array[i];
 
+    delete[] pixel_array;
     output_file.close();
-    //
-    // debug
-    //
 }
