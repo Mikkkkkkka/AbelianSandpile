@@ -7,4 +7,6 @@ add_executable(AbelianSandpile src/main.cpp
         src/Printer.cpp
         src/Printer.h
         src/Model.cpp
-        src/Model.h)
+        src/Model.h
+        lib/ArgParser.cpp
+        lib/ArgParser.h)

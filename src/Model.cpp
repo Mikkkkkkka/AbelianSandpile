@@ -7,7 +7,6 @@
 #include <chrono>
 
 void Model::resize_field() {
-    // Initializing new field
     const auto new_field = new uint64_t*[height+2];
     for (int i = 0; i < height+2; i++) {
         new_field[i] = new uint64_t[width+2];
@@ -15,12 +14,10 @@ void Model::resize_field() {
             new_field[i][j] = 0;
     }
 
-    // Copying old values to it
     for (int i = 0; i < height; i++)
         for (int j = 0; j < width; j++)
             new_field[i+1][j+1] = field[i][j];
 
-    // Freeing old field from memory
     for (int i = 0; i < height; i++)
         delete[] field[i];
     delete[] field;

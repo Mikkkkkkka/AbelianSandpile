@@ -17,7 +17,7 @@ public:
 
     Printer(const std::string& output_dir);
 
-    void print(const Model &model, std::string filename);
+    void print(const Model &model, const std::string& filename) const;
 };
 
 

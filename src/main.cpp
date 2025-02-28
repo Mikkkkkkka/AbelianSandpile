@@ -1,21 +1,39 @@
+#include <filesystem>
+#include <format>
 #include <fstream>
 #include <iostream>
+
 #include "Model.h"
 #include "Printer.h"
+#include "../lib/ArgParser.h"
 
 int main(const int argc, char **argv) {
 
-    if (argc < 2) {
-        std::cout << "Error: The program requires at least one parameter!" << std::endl;
+    std::vector<std::string> args;
+    for (int i = 0; i < argc; i++)
+        args.push_back(argv[i]);
+
+    auto arg_parser = ArgumentParser::ArgParser("AbelianSandpile");
+    arg_parser.AddStringArgument('i', "input", "-i  --input=<filename>  Файл с изначальными точками (required)");
+    arg_parser.AddStringArgument('o', "output", "-o --output=<path>     Путь к папке, в которую будут выведены изображения").Default(".");
+    arg_parser.AddIntArgument('m', "max-iter", "-m  --max-iter=<number> Максимально количество итераций").Default(-1);
+    arg_parser.AddIntArgument('f', "freq", "-f  --freq=<number>     Частота вывода изображений").Default(0);
+    if (!arg_parser.Parse(args)) {
+        std::cout << arg_parser.HelpDescription() << std::endl;
         return 1;
     }
+
+    std::string input = arg_parser.GetStringValue("input");
+    std::string output = arg_parser.GetStringValue("output");
+    int max_iter = arg_parser.GetIntValue("max-iter");
+    int freq = arg_parser.GetIntValue("freq");
 
     std::ifstream input_file;
     std::string temp;
     int cell_count = 0;
 
     // counting number of lines
-    input_file.open(argv[1]);
+    input_file.open(input);
     if (!input_file) {
         std::cout << "Error: Failed to open file for counting lines!" << std::endl;
         return 1;
@@ -25,7 +43,7 @@ int main(const int argc, char **argv) {
     input_file.close();
 
     // filling the cell array up
-    input_file.open(argv[1]);
+    input_file.open(input);
     if (!input_file) {
         std::cout << "Error: Failed to open file for reading cell values!" << std::endl;
         return 1;
@@ -40,24 +58,30 @@ int main(const int argc, char **argv) {
     input_file.close();
 
     auto model = Model(cells, cell_count);
+    auto printer = Printer(output);
+    if (output != ".")
+        std::filesystem::create_directory(arg_parser.GetStringValue("output"));
 
     // starting engine
-    while (true) {
+    for (int i = 0; i+1 != max_iter; i++) {
+        if (freq != 0 && i % freq == 0)
+            printer.print(model, std::format("iteration{}", i+1));
         if (!model.step())
             break;
     }
 
-    auto printer = Printer("./out/");
-    printer.print(model, "somefile");
+    // //
+    // // debug
+    // //
+    // std::cout << "-- Debug -- " << std::endl;
+    // for (int i = 0; i < model.height; i++) {
+    //     for (int j = 0; j < model.width; j++) {
+    //         std::cout << model.field[i][j] << ' ';
+    //     }
+    //     std::cout << std::endl;
+    // }
 
-    //
-    // debug
-    //
-    for (int i = 0; i < model.height; i++) {
-        for (int j = 0; j < model.width; j++)
-            std::cout << model.field[i][j];
-        std::cout << std::endl;
-    }
+    printer.print(model, "iteration_final");
 
     return 0;
 }

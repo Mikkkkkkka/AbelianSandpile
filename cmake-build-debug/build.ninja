@@ -67,6 +67,12 @@ build CMakeFiles/AbelianSandpile.dir/src/Model.cpp.obj: CXX_COMPILER__AbelianSan
   OBJECT_DIR = CMakeFiles\AbelianSandpile.dir
   OBJECT_FILE_DIR = CMakeFiles\AbelianSandpile.dir\src
 
+build CMakeFiles/AbelianSandpile.dir/lib/ArgParser.cpp.obj: CXX_COMPILER__AbelianSandpile_unscanned_Debug C$:/Users/NeSai/CLionProjects/AbelianSandpile/lib/ArgParser.cpp || cmake_object_order_depends_target_AbelianSandpile
+  DEP_FILE = CMakeFiles\AbelianSandpile.dir\lib\ArgParser.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\AbelianSandpile.dir
+  OBJECT_FILE_DIR = CMakeFiles\AbelianSandpile.dir\lib
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target AbelianSandpile
@@ -75,7 +81,7 @@ build CMakeFiles/AbelianSandpile.dir/src/Model.cpp.obj: CXX_COMPILER__AbelianSan
 #############################################
 # Link the executable AbelianSandpile.exe
 
-build AbelianSandpile.exe: CXX_EXECUTABLE_LINKER__AbelianSandpile_Debug CMakeFiles/AbelianSandpile.dir/src/main.cpp.obj CMakeFiles/AbelianSandpile.dir/src/Printer.cpp.obj CMakeFiles/AbelianSandpile.dir/src/Model.cpp.obj
+build AbelianSandpile.exe: CXX_EXECUTABLE_LINKER__AbelianSandpile_Debug CMakeFiles/AbelianSandpile.dir/src/main.cpp.obj CMakeFiles/AbelianSandpile.dir/src/Printer.cpp.obj CMakeFiles/AbelianSandpile.dir/src/Model.cpp.obj CMakeFiles/AbelianSandpile.dir/lib/ArgParser.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\AbelianSandpile.dir
