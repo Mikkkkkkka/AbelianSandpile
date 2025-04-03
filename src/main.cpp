@@ -63,9 +63,11 @@ int main(const int argc, char **argv) {
         std::filesystem::create_directory(arg_parser.GetStringValue("output"));
 
     // starting engine
+    char* output_filename_buf = new char[20];
     for (int i = 0; i+1 != max_iter; i++) {
+        sprintf(output_filename_buf, "iteration%d", i+1);
         if (freq != 0 && i % freq == 0)
-            printer.print(model, std::format("iteration{}", i+1));
+            printer.print(model, output_filename_buf);
         if (!model.step())
             break;
     }
