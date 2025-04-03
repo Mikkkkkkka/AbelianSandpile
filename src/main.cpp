@@ -19,7 +19,7 @@ int main(const int argc, char **argv) {
     arg_parser.AddIntArgument('m', "max-iter", "-m  --max-iter=<number> Максимально количество итераций").Default(-1);
     arg_parser.AddIntArgument('f', "freq", "-f  --freq=<number>     Частота вывода изображений").Default(0);
     if (!arg_parser.Parse(args)) {
-        std::cout << arg_parser.HelpDescription() << std::endl;
+        std::cout << "Loh, Pidr!" << std::endl;
         return 1;
     }
 
@@ -63,9 +63,11 @@ int main(const int argc, char **argv) {
         std::filesystem::create_directory(arg_parser.GetStringValue("output"));
 
     // starting engine
+    char* next_filename = new char[20];
     for (int i = 0; i+1 != max_iter; i++) {
+        sprintf(next_filename, "iteration%d", i+1);
         if (freq != 0 && i % freq == 0)
-            printer.print(model, std::format("iteration{}", i+1));
+            printer.print(model, next_filename);
         if (!model.step())
             break;
     }
